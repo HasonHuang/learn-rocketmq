@@ -2,10 +2,14 @@ package com.hason.learn.rocketmq.chapter2;
 
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.log.ClientLogger;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 以 Sync 方式发送消息
@@ -20,12 +24,12 @@ public class SyncProducer {
         // 创建生产者实例
         DefaultMQProducer producer = new DefaultMQProducer("chapter1_producer");
         // 指定 name server 地址
-        producer.setNamesrvAddr("192.168.137.100:9876");
+        producer.setNamesrvAddr("192.168.137.100:9876;192.168.137.101:9876");
         // 启动实例
         producer.start();
 
         String msgTemplate=  "Hello RocketMQ ";
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             // 创建消息实例，指定 Topic、Tag和消息体
             Message message = new Message("TopicTest", "TagA", (msgTemplate + i).getBytes());
             // 向其中一个 broker 发送消息
